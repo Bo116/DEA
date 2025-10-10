@@ -25,9 +25,6 @@ public class ArgitalpenZerrenda {
 	}
 	public Argitalpen bilatu(String id) {
 		Argitalpen a = this.argitalpenak.get(id);
-		if (a == null) {
-			System.out.println("Ez da aurkitu argitalpenik id honekin: " + id);
-		}
 		return a;
 	}
 	public void kenduArgitalpen(String id) {

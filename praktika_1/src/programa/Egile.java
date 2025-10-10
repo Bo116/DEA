@@ -19,13 +19,14 @@ public class Egile {
 	public void gehituArgitalpen(String a) {
 		this.argitalpenak.add(a);
 	}
-	public void printArgitalpenak() {
+	public ArrayList printArgitalpenak() {
 		System.out.println("Egilearen id: " + this.id);
 		for (int i = 0; i < this.argitalpenak.size(); i++) {
 			if (this.argitalpenak.get(i) != null) {
 			System.out.println("Argitalpena: " + this.argitalpenak.get(i));
 		}
 		}
+		return this.argitalpenak;
 	}
 	public ArrayList<String> getArgitalpenak() {
 		return argitalpenak;

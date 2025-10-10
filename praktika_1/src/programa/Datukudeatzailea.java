@@ -40,6 +40,7 @@ public class Datukudeatzailea {
 	public static void main(String[] args) {
 		Datukudeatzailea dK = Datukudeatzailea.getDatuKudeatzailea();
 		ArgitalpenZerrenda aZ = ArgitalpenZerrenda.getArgitalpenZerrenda();
+		EgileZerrenda eZ = EgileZerrenda.getEgileZerrenda();
 		boolean jarraitu = true;
 		boolean datuakKargatuta = false;
 		Set<Integer> datuakBeharrezkoak = Set.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
@@ -68,6 +69,7 @@ public class Datukudeatzailea {
 		}
 		switch (aukera) {
 		case 1:
+			System.out.println("Datuak kargatzen...");
 			dK.readFile("src/Datuak/authors-name-all.txt");
 			dK.readFile("src/Datuak/publications-titles-all.txt");
 			dK.readFile("src/Datuak/publications-citedPubs-all.txt");
@@ -82,37 +84,71 @@ public class Datukudeatzailea {
 				if (a != null) {
 					System.out.println("Argitalpena aurkitu da: " + a.getId() + " - " + a.getIzenburua());
 				}
+				else {
+					System.out.println("⚠️ Ez da aurkitu argitalpenik id honekin: " + bilatuId);
+				}
 				break;
 		case 3:
 				System.out.println("Sartu gehitu nahi duzun argitalpenaren identifikatzailea:");
 				String gehituId = Teklatua.getTeklatua().irakurriString();
+				if (aZ.bilatu(gehituId) != null) {
+					System.out.println("⚠️ Argitalpen hori jadanik existitzen da.");
+					break;
+				}
 				System.out.println("Sartu gehitu nahi duzun argitalpenaren izenburua:");
 				String gehituIzenburua = Teklatua.getTeklatua().irakurriString();
-				aZ.addArgitalpen(gehituId, gehituIzenburua);
 				System.out.println("Argitalpena gehitu da: " + gehituId + " - " + gehituIzenburua);
 				break;
 		case 4:
 			    System.out.println("Sartu aipamen bat gehitu nahi diozun argitalpenaren identifikatzailea:");
 				String argitalpenId = Teklatua.getTeklatua().irakurriString();
+				if (aZ.bilatu(argitalpenId) == null) {
+					System.out.println("⚠️ Ez da aurkitu argitalpenik id honekin: " + argitalpenId);
+					break;
+				}
 				System.out.println("Sartu aipamenaren identifikatzailea:");
 				String aipamenId = Teklatua.getTeklatua().irakurriString();
+				if(aZ.bilatu(argitalpenId).aipamenaDauka(aipamenId)) {
+					System.out.println("⚠️ Aipamen hori jadanik existitzen da argitalpen horretan.");
+					break;
+				}
 				dK.gehituAipamen(argitalpenId, aipamenId);
 				break;
 		case 5:
 				System.out.println("Sartu egile bat gehitu nahi diozun argitalpenaren identifikatzailea:");
 				String argitalpenId2 = Teklatua.getTeklatua().irakurriString();
+				if (aZ.bilatu(argitalpenId2) == null) {
+					System.out.println("⚠️ Ez da aurkitu argitalpenik id honekin: " + argitalpenId2);
+					break;
+				}
 				System.out.println("Sartu egilearen identifikatzailea:");
 				String egileId = Teklatua.getTeklatua().irakurriString();
+				if(eZ.bilatu(egileId) == null) {
+					System.out.println("⚠️ Ez da aurkitu egilerik id honekin: " + egileId);
+					break;
+				}
+				if(aZ.bilatu(argitalpenId2).egileaDauka(egileId)) {
+					System.out.println("⚠️ Egile hori jadanik existitzen da argitalpen horretan.");
+					break;
+				}
 				dK.gehituEgilea(argitalpenId2, egileId);
 				break;
 		case 6:
 				System.out.println("Sartu argitalpenaren ID-a");
 				String argitalpenId3 = Teklatua.getTeklatua().irakurriString();
+				if (aZ.bilatu(argitalpenId3) == null) {
+					System.out.println("⚠️ Ez da aurkitu argitalpenik id honekin: " + argitalpenId3);
+					break;
+				}
 				dK.aipamenakInprimatu(argitalpenId3);
 				break;
 		case 7:
 				System.out.println("Sartu argitalpenaren ID-a");
 				String argitalpenId4 = Teklatua.getTeklatua().irakurriString();
+				if (aZ.bilatu(argitalpenId4) == null) {
+					System.out.println("⚠️ Ez da aurkitu argitalpenik id honekin: " + argitalpenId4);
+					break;
+				}
 				dK.egileakInprimatu(argitalpenId4);
 				break;
 		case 8:
@@ -122,16 +158,27 @@ public class Datukudeatzailea {
 				if (e != null) {
 					e.printArgitalpenak();
 				}
+				else {
+					System.out.println("⚠️ Ez da aurkitu egilerik id honekin: " + egileId2);
+				}
 				break;
 		case 9:
 				System.out.println("Sartu ezabatu nahi duzun argitalpenaren identifikatzailea:");
 				String ezabatuId = Teklatua.getTeklatua().irakurriString();
+				if (aZ.bilatu(ezabatuId) == null) {
+					System.out.println("⚠️ Ez da aurkitu argitalpenik id honekin: " + ezabatuId);
+					break;
+				}
 				dK.kenduArgitalpen(ezabatuId);
 				System.out.println("Argitalpena ezabatu da: " + ezabatuId);
 				break;
 		case 10:
 				System.out.println("Sartu ezabatu nahi duzun egilearen identifikatzailea:");
 				String ezabatuEgileId = Teklatua.getTeklatua().irakurriString();
+				if (eZ.bilatu(ezabatuEgileId) == null) {
+					System.out.println("⚠️ Ez da aurkitu egilerik id honekin: " + ezabatuEgileId);
+					break;
+				}
 				dK.ezabatuEgilea(ezabatuEgileId);
 				System.out.println("Egilea ezabatu da: " + ezabatuEgileId);
 				break;
@@ -145,6 +192,7 @@ public class Datukudeatzailea {
 				break;
 		case 12:
 				dK.gordeFitxategietan();
+				System.out.println("Argitalpenen eta egileen zerrendak (eguneratua) fitxategietan gorde dira.");
 				break;
 		case 13:
 				System.out.println("Irten da programa.");

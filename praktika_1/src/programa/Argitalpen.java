@@ -27,17 +27,19 @@ public class Argitalpen implements Comparable<Argitalpen> {
 		
 		return this.egileak.contains(egileId);
 	}
+	public boolean aipamenaDauka(String aipamenId) {
+		
+		return this.aipamenak.contains(aipamenId);
+	}
 	public void gehituAipamen(String aipamenId) {
 		this.aipamenak.add(aipamenId);
-		System.out.println("Aipamena gehitu: " + aipamenId + " argitalpenari: " + this.id);
 	}
 	public void gehituEgilea(String egileId) {
 		this.egileak.add(egileId);
-		System.out.println("Egilea gehitu: " + egileId + " argitalpenari: " + this.id);
 	}
 	public void egileaKendu(String egileId) {
 		this.egileak.remove(egileId);
-		System.out.println("Egilea kendu: " + egileId + " argitalpenari: " + this.id);
+		
 	}
 
 	public int compareTo(Argitalpen lag) {
@@ -47,20 +49,23 @@ public class Argitalpen implements Comparable<Argitalpen> {
 	public String getIzenburua() {
 		return izenburua;
 	}
-	public void printAipamenak() {
+	public ArrayList<String> printAipamenak() {
 		System.out.println("Argitalpenaren id: " + this.id);
 		for (int i = 0; i < this.aipamenak.size(); i++) {
 			if (this.aipamenak.get(i) != null) {
 			System.out.println("Aipamena: " + this.aipamenak.get(i));
 		}
+			
 		}
+		return this.aipamenak;
 	}
-	public void printEgileak() {
+	public ArrayList<String> printEgileak() {
 		System.out.println("Argitalpenaren id: " + this.id);
 		for (int i = 0; i < this.egileak.size(); i++) {
 			if (this.egileak.get(i) != null) {
 			System.out.println("Egilea: " + this.egileak.get(i));
 		}
 		}
+		return this.egileak;
 	}
 }
