@@ -97,6 +97,7 @@ public class Datukudeatzailea {
 				}
 				System.out.println("Sartu gehitu nahi duzun argitalpenaren izenburua:");
 				String gehituIzenburua = Teklatua.getTeklatua().irakurriString();
+				aZ.addArgitalpen(gehituId, gehituIzenburua);
 				System.out.println("Argitalpena gehitu da: " + gehituId + " - " + gehituIzenburua);
 				break;
 		case 4:
@@ -132,6 +133,13 @@ public class Datukudeatzailea {
 					break;
 				}
 				dK.gehituEgilea(argitalpenId2, egileId);
+				if(EgileZerrenda.getEgileZerrenda().bilatu(egileId) == null) {
+					System.out.println("⚠️ Ez da aurkitu egilerik id honekin: " + egileId);
+					break;
+				}
+				if(EgileZerrenda.getEgileZerrenda().bilatu(egileId) != null) {
+					EgileZerrenda.getEgileZerrenda().bilatu(egileId).gehituArgitalpen(argitalpenId2);
+				}
 				break;
 		case 6:
 				System.out.println("Sartu argitalpenaren ID-a");
