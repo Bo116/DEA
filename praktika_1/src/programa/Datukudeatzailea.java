@@ -114,6 +114,7 @@ public class Datukudeatzailea {
 					break;
 				}
 				dK.gehituAipamen(argitalpenId, aipamenId);
+				System.out.println("Aipamena gehitu da argitalpenari: " + aipamenId + " - " + argitalpenId);
 				break;
 		case 5:
 				System.out.println("Sartu egile bat gehitu nahi diozun argitalpenaren identifikatzailea:");
@@ -139,6 +140,7 @@ public class Datukudeatzailea {
 				}
 				if(EgileZerrenda.getEgileZerrenda().bilatu(egileId) != null) {
 					EgileZerrenda.getEgileZerrenda().bilatu(egileId).gehituArgitalpen(argitalpenId2);
+					System.out.println("Egilea gehitu da argitalpenari: " + egileId + " - " + argitalpenId2);
 				}
 				break;
 		case 6:
