@@ -22,7 +22,6 @@ private static EgileZerrenda nEgileZerrenda = null;
 	public void addEgile(String id, String izena) {
 		Egile e = new Egile(id.trim(), izena.trim());
 		this.egileak.put(id, e);
-	
 	}
 	public void kenduEgilea(String egileId) {
 		Egile e = bilatu(egileId);

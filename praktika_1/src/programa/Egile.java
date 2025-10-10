@@ -43,8 +43,4 @@ public class Egile {
 		return izena;
 	}
 	
-	public int compareTo(Egile lag) {
-		
-		return this.id.compareTo(lag.id);
-	}
 }
