@@ -43,7 +43,7 @@ public class Datukudeatzailea {
 		EgileZerrenda eZ = EgileZerrenda.getEgileZerrenda();
 		boolean jarraitu = true;
 		boolean datuakKargatuta = false;
-		Set<Integer> datuakBeharrezkoak = Set.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+		Set<Integer> datuakBeharrezkoak = Set.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ,13);
 		
 		while(jarraitu) {
 		System.out.println("Aukeratu funtzio bat:");
@@ -59,7 +59,8 @@ public class Datukudeatzailea {
 		System.out.println("10.Ezabatu egile bat");
 		System.out.println("11.Argitalpenen zerrenda alfabetikoki ordenatua lortu");
 		System.out.println("12.Argitalpenen eta egileen zerrendak (eguneratua) fitxategietan gorde");
-		System.out.println("13.Irten");
+		System.out.println("13. 2 praktikako probak");
+		System.out.println("14.Irten");
 		int aukera = Teklatua.getTeklatua().irakurriInt();
 		if (datuakBeharrezkoak.contains(aukera) && !datuakKargatuta) {
 			System.out.println("⚠️ Lehenik datuak kargatu behar dituzu (aukera 1).");
@@ -205,6 +206,43 @@ public class Datukudeatzailea {
 				System.out.println("Argitalpenen eta egileen zerrendak (eguneratua) fitxategietan gorde dira.");
 				break;
 		case 13:
+			System.out.println("\n--- PROBA: Egile baten zerrenda berria ---");
+
+			String egileIdProba = "Q46250423";  // Donatella Taramelli
+			Egile egileProba = EgileZerrenda.getEgileZerrenda().bilatu(egileIdProba);
+
+			if (egileProba != null) {
+			    System.out.println("Egilea aurkitu da: " + egileProba.getId() + " - " + egileProba.getIzena());
+
+			    System.out.println("\nEgilearen hasierako argitalpenak:");
+			    egileProba.printArgitalpenak();
+
+			    // Proba: elementu bat bilatu
+			    String bilatuaId = "Q34687796";
+			    System.out.println("\nArgitalpena '" + bilatuaId + "' zerrendan dago? " +
+			        egileProba.argitalpenaDauka(bilatuaId));
+
+			    // Proba: elementu bat gehitu eta berriz inprimatu
+			    String berria = "Q99999999";
+			    System.out.println("\nGehitzen: " + berria);
+			    egileProba.gehituArgitalpen(berria);
+			    System.out.println("Eguneratutako zerrenda:");
+			    egileProba.printArgitalpenak();
+
+			    // Proba: elementu bat ezabatu
+			    System.out.println("\nKenduko da: " + bilatuaId);
+			    egileProba.argitalpenaKendu(bilatuaId);
+			    System.out.println("Zerrenda ondoren:");
+			    egileProba.printArgitalpenak();
+
+			    // Proba: hutsik dagoen ala ez
+			    System.out.println("\nZerrenda hutsa? " + egileProba.getArgitalpenak().isEmpty());
+			} else {
+			    System.out.println("⚠️ Ez da aurkitu egilea id honekin: " + egileIdProba);
+			}
+			break;
+
+		case 14:
 				System.out.println("Irten da programa.");
 				jarraitu = false;
 				break;
@@ -318,7 +356,7 @@ public class Datukudeatzailea {
 	    try {
 	        PrintWriter pwEgile = new PrintWriter("src/Datuak/egileak.txt");
 	        for (Egile e : EgileZerrenda.getEgileZerrenda().getEgileak().values()) {
-	            String argList = String.join(",", e.getArgitalpenak()); //
+	        	String argList = String.join(",", e.getArgitalpenakLista());
 	            pwEgile.println(e.getId() + " # " + e.getIzena() + " # " + argList);
 	        }
 	        pwEgile.close();
