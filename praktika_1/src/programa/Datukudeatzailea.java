@@ -43,7 +43,7 @@ public class Datukudeatzailea {
 		EgileZerrenda eZ = EgileZerrenda.getEgileZerrenda();
 		boolean jarraitu = true;
 		boolean datuakKargatuta = false;
-		Set<Integer> datuakBeharrezkoak = Set.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ,13);
+		Set<Integer> datuakBeharrezkoak = Set.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ,13,14);
 		
 		while(jarraitu) {
 		System.out.println("Aukeratu funtzio bat:");
@@ -60,7 +60,8 @@ public class Datukudeatzailea {
 		System.out.println("11.Argitalpenen zerrenda alfabetikoki ordenatua lortu");
 		System.out.println("12.Argitalpenen eta egileen zerrendak (eguneratua) fitxategietan gorde");
 		System.out.println("13. 2 praktikako probak");
-		System.out.println("14.Irten");
+		System.out.println("14. Bilatu egileen arteko erlazioa (Grafoa/BFS)");
+		System.out.println("15.Irten");
 		int aukera = Teklatua.getTeklatua().irakurriInt();
 		if (datuakBeharrezkoak.contains(aukera) && !datuakKargatuta) {
 			System.out.println("⚠️ Lehenik datuak kargatu behar dituzu (aukera 1).");
@@ -241,8 +242,28 @@ public class Datukudeatzailea {
 			    System.out.println("⚠️ Ez da aurkitu egilea id honekin: " + egileIdProba);
 			}
 			break;
-
 		case 14:
+		    System.out.println("Grafoa sortzen...");
+		    Graph grafoa = new Graph();
+		    grafoa.grafoaSortu(); 
+		    
+		    System.out.println("Grafoa sortuta. Sartu lehenengo egilearen izena:");
+		    String izena1 = Teklatua.getTeklatua().irakurriString();
+		    
+		    System.out.println("Sartu bigarren egilearen izena (Adib: Rosalind Franklin):");
+		    String izena2 = Teklatua.getTeklatua().irakurriString();
+		    
+		    System.out.println("Erlazioa bilatzen...");
+		    ArrayList<String> bidea = grafoa.erlazionatuta(izena1, izena2);
+		    
+		    if (bidea != null) {
+		        System.out.println("✅ ERLAZIOA AURKITU DA:");
+		        System.out.println(String.join(" -> ", bidea));
+		    } else {
+		        System.out.println("❌ Ez da erlaziorik aurkitu " + izena1 + " eta " + izena2 + " artean.");
+		    }
+		    break;
+		case 15:
 				System.out.println("Irten da programa.");
 				jarraitu = false;
 				break;
