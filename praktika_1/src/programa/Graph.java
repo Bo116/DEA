@@ -74,6 +74,7 @@ public class Graph {
     }
 	
     public boolean erlazionatuta(String a1, String a2){
+    	
         if (th == null || !th.containsKey(a1) || !th.containsKey(a2)) return false;
 
         Queue<Integer> aztertuGabeak = new LinkedList<Integer>();
@@ -102,10 +103,19 @@ public class Graph {
     }
 
     public ArrayList<String> erlazionatutaBidea(String a1, String a2){
-        if (th == null || !th.containsKey(a1) || !th.containsKey(a2)) return null;
 
-        int s = th.get(a1);
-        int t = th.get(a2);
+        if (!th.containsKey(a1) || !th.containsKey(a2)) {
+            System.out.println("Egileetako bat ez da existitzen");
+            return null;
+        }
+        if (th == null || !th.containsKey(a1) || !th.containsKey(a2)) return null;
+        String n1 = a1.trim(); 
+        String n2 = a2.trim();
+        if (th == null || !th.containsKey(n1) || !th.containsKey(n2)) {
+            return null;
+        }
+        int s = th.get(n1);
+        int t = th.get(n2);
 
         if (s == t) {
             ArrayList<String> res = new ArrayList<>();
@@ -147,5 +157,8 @@ public class Graph {
         path.add(keys[s]);
         Collections.reverse(path);
         return path;
+    }
+    public boolean isEmpty() {
+        return th == null || th.isEmpty();
     }
 }

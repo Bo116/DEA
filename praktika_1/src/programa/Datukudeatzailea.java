@@ -41,9 +41,10 @@ public class Datukudeatzailea {
 		Datukudeatzailea dK = Datukudeatzailea.getDatuKudeatzailea();
 		ArgitalpenZerrenda aZ = ArgitalpenZerrenda.getArgitalpenZerrenda();
 		EgileZerrenda eZ = EgileZerrenda.getEgileZerrenda();
+		Graph grafoa=null;
 		boolean jarraitu = true;
 		boolean datuakKargatuta = false;
-		Set<Integer> datuakBeharrezkoak = Set.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ,13,14);
+		Set<Integer> datuakBeharrezkoak = Set.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ,13,14,15);
 		
 		while(jarraitu) {
 		System.out.println("Aukeratu funtzio bat:");
@@ -60,8 +61,9 @@ public class Datukudeatzailea {
 		System.out.println("11.Argitalpenen zerrenda alfabetikoki ordenatua lortu");
 		System.out.println("12.Argitalpenen eta egileen zerrendak (eguneratua) fitxategietan gorde");
 		System.out.println("13. 2 praktikako probak");
-		System.out.println("14. Bilatu egileen arteko erlazioa (Grafoa/BFS)");
-		System.out.println("15.Irten");
+		System.out.println("14. Bilatu egileen arteko erlazioa");
+		System.out.println("15.Kalkulatu daitezkeen erlazio kopurua");
+		System.out.println("16.Irten");
 		int aukera = Teklatua.getTeklatua().irakurriInt();
 		if (datuakBeharrezkoak.contains(aukera) && !datuakKargatuta) {
 			System.out.println("⚠️ Lehenik datuak kargatu behar dituzu (aukera 1).");
@@ -242,28 +244,85 @@ public class Datukudeatzailea {
 			    System.out.println("⚠️ Ez da aurkitu egilea id honekin: " + egileIdProba);
 			}
 			break;
-		case 14:
-		    System.out.println("Grafoa sortzen...");
-		    Graph grafoa = new Graph();
-		    grafoa.grafoaSortu(); 
+		case 14: // Bilatu erlazioa
+	
+		    if (grafoa == null || grafoa.isEmpty()) {
+		        System.out.println("Grafoa sortzen...");
+		        grafoa = new Graph();
+		        grafoa.grafoaSortu();
+		    }
+		    if (grafoa.isEmpty()) {
+		        System.out.println("⚠️ Grafoa hutsik dago. Datuak kargatu dituzu (1. aukera)?");
+		        break;
+		    }
+		
+		    System.out.println("Sartu lehenengo egilearen izena:");
+		    String izenaA = Teklatua.getTeklatua().irakurriString();
 		    
-		    System.out.println("Grafoa sortuta. Sartu lehenengo egilearen izena:");
-		    String izena1 = Teklatua.getTeklatua().irakurriString();
+		    System.out.println("Sartu bigarren egilearen izena:");
+		    String izenaB = Teklatua.getTeklatua().irakurriString();
 		    
-		    System.out.println("Sartu bigarren egilearen izena (Adib: Rosalind Franklin):");
-		    String izena2 = Teklatua.getTeklatua().irakurriString();
-		    
-		    System.out.println("Erlazioa bilatzen...");
-		    ArrayList<String> bidea = grafoa.erlazionatuta(izena1, izena2);
+            // --- HASIERA CRONOMETROA ---
+		    long hasiera = System.currentTimeMillis(); 
+            
+		    ArrayList<String> bidea = grafoa.erlazionatutaBidea(izenaA, izenaB);
+            
+            // --- AMAIERA CRONOMETROA ---
+		    long amaiera = System.currentTimeMillis();
+            
+            // Inprimatu denbora
+            System.out.println("⏳ Bilaketa denbora: " + (amaiera - hasiera) + " ms");
 		    
 		    if (bidea != null) {
-		        System.out.println("✅ ERLAZIOA AURKITU DA:");
-		        System.out.println(String.join(" -> ", bidea));
+		        System.out.println("\n✅ Bidea: " + String.join(" -> ", bidea));
 		    } else {
-		        System.out.println("❌ Ez da erlaziorik aurkitu " + izena1 + " eta " + izena2 + " artean.");
+		        System.out.println("\n❌ Ez da erlaziorik aurkitu.");
 		    }
 		    break;
-		case 15:
+		case 15: 
+	
+		    if (grafoa == null || grafoa.isEmpty()) {
+		        System.out.println("Grafoa sortzen...");
+		        grafoa = new Graph();
+		        grafoa.grafoaSortu();
+		    }
+		    if (grafoa.isEmpty()) {
+		        System.out.println("⚠️ Grafoa hutsik dago. Datuak kargatu dituzu (1. aukera)?");
+		        break;
+		    }
+
+	
+		    System.out.println("Sartu lehenengo egilearen izena:");
+		    String izenaStart = Teklatua.getTeklatua().irakurriString();
+		    
+		    System.out.println("Sartu bigarren egilearen izena:");
+		    String izenaEnd = Teklatua.getTeklatua().irakurriString();
+
+		    System.out.println("Errendimendua kalkulatzen (itxaron mesedez)...");
+		    
+		
+		     hasiera = System.currentTimeMillis();
+		    int errepikapenak = 1000; 
+
+		    for (int i = 0; i < errepikapenak; i++) {
+		        grafoa.erlazionatutaBidea(izenaStart, izenaEnd);
+		    }
+
+		     amaiera = System.currentTimeMillis();
+		    long denboraTotala = amaiera - hasiera; 
+
+
+		    System.out.println("\n--- ERRENDIMENDU DATUAK ---");
+		    System.out.println(errepikapenak + " bilaketa egiteko denbora: " + denboraTotala + " ms");
+
+		    if (denboraTotala > 0) {
+		        double bilaketaMinutuko = (errepikapenak * 60000.0) / denboraTotala;
+		        System.out.println("ESTIMAZIOA: " + (int)bilaketaMinutuko + " bilaketa/minutuko");
+		    } else {
+		        System.out.println("Oso azkarra izan da (0 ms).");
+		    }
+		    break;
+		case 16:
 				System.out.println("Irten da programa.");
 				jarraitu = false;
 				break;
