@@ -1,5 +1,7 @@
 package programa;
-
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Random;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -160,5 +162,130 @@ public class Graph {
     }
     public boolean isEmpty() {
         return th == null || th.isEmpty();
+    }
+    public HashMap<String, Double> randomWalkPageRank() {
+        HashMap<String, Double> emaitza = new HashMap<>();
+        if (keys == null || keys.length == 0) return emaitza;
+
+        int N = keys.length;
+        double[] aldiak = new double[N];
+        double pausuak = 0;
+        
+        int iterazioak = N * 1000;
+        Random rand = new Random();
+
+        for (int i = 0; i < iterazioak; i++) {
+            int oraingoa = rand.nextInt(N);
+            Set<Integer> ibilbideHonetanBisitatua = new HashSet<>();
+            aldiak[oraingoa]++;
+            ibilbideHonetanBisitatua.add(oraingoa);
+            pausuak++;
+            boolean gelditu = false;
+            while (!gelditu) {
+                if (rand.nextDouble() > 0.85) {
+                    gelditu = true;
+                    break;
+                }
+                ArrayList<Integer> auzokideak = adjList[oraingoa];
+                if (auzokideak == null || auzokideak.isEmpty()) {
+                    gelditu = true;
+                    break;
+                }
+                int hurrengoa = auzokideak.get(rand.nextInt(auzokideak.size()));
+                if (ibilbideHonetanBisitatua.contains(hurrengoa)) {
+                    gelditu = true;
+                    break;
+                }
+                oraingoa = hurrengoa;
+                ibilbideHonetanBisitatua.add(oraingoa);
+                aldiak[oraingoa]++;
+                pausuak++;
+            }
+        }
+        for (int i = 0; i < N; i++) {
+            if (pausuak > 0) {
+                emaitza.put(keys[i], aldiak[i] / pausuak);
+            } else {
+                emaitza.put(keys[i], 0.0);
+            }
+        }
+
+        return emaitza;
+    }
+    public HashMap<String, Double> pageRank() {
+        HashMap<String, Double> emaitza = new HashMap<>();
+        if (keys == null || keys.length == 0) return emaitza;
+
+        int N = keys.length;
+        double[] oraingoPR = new double[N];
+        double dampingFactor = 0.85;
+        double limitea = 0.0001;
+        if (N < 20) System.out.print("Iter 0: ");
+        for (int i = 0; i < N; i++) {
+            oraingoPR[i] = 1.0 / N;
+            if (N < 20) System.out.printf("%s=%.4f  ", keys[i], oraingoPR[i]);
+        }
+        if (N < 20) System.out.println();
+
+        boolean converged = false;
+        int iteracion = 1;
+        
+        while (!converged) {
+            double[] nextPR = new double[N];
+            double baseValue = (1.0 - dampingFactor) / N;
+            for (int i = 0; i < N; i++) nextPR[i] = baseValue;
+            for (int i = 0; i < N; i++) {
+                int outDegree = adjList[i].size();
+                if (outDegree > 0) {
+                    double share = (oraingoPR[i] * dampingFactor) / outDegree;
+                    for (int neighbor : adjList[i]) {
+                        nextPR[neighbor] += share;
+                    }
+                }
+            }
+            double diff = 0.0;
+            for (int i = 0; i < N; i++) {
+                diff += Math.abs(nextPR[i] - oraingoPR[i]);
+            }
+            
+            oraingoPR = nextPR;
+            if (N < 20) {
+                System.out.print("Iter " + iteracion + ": ");
+                for (int i = 0; i < N; i++) {
+                    System.out.printf("%s=%.4f  ", keys[i], oraingoPR[i]);
+                }
+                System.out.println();
+            }
+            if (diff < limitea) {
+                converged = true;
+            }
+            iteracion++;
+        }
+
+        for (int i = 0; i < N; i++) {
+            emaitza.put(keys[i], oraingoPR[i]);
+        }
+        return emaitza;
+    }
+    public void probaGrafoTxikiarekin() {
+        th = new HashMap<>();
+        th.put("A", 0);
+        th.put("B", 1);
+        th.put("C", 2);
+        th.put("D", 3);
+
+        keys = new String[]{"A", "B", "C", "D"};
+
+        adjList = (ArrayList<Integer>[]) new ArrayList[4];
+        for (int i = 0; i < 4; i++) {
+            adjList[i] = new ArrayList<>();
+        }
+        adjList[1].add(0);
+        adjList[1].add(2);
+        adjList[2].add(0);
+        adjList[3].add(0); 
+        adjList[3].add(1); 
+        adjList[3].add(2); 
+        System.out.println("Proba grafoa (A, B, C, D) zuzen kargatu da.");
     }
 }

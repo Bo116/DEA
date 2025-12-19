@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.HashMap;
 /*PROGRAMAK EGIN BEHAR DITUEN FUNTZIOAK:
 • Datuak kargatu fitxategietatik
 • Argitalpen baten bilaketa, bere identifikatzailea emanda
@@ -44,7 +45,7 @@ public class Datukudeatzailea {
 		Graph grafoa=null;
 		boolean jarraitu = true;
 		boolean datuakKargatuta = false;
-		Set<Integer> datuakBeharrezkoak = Set.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ,13,14,15);
+		Set<Integer> datuakBeharrezkoak = Set.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ,13,14,15,16,17);
 		
 		while(jarraitu) {
 		System.out.println("Aukeratu funtzio bat:");
@@ -63,7 +64,9 @@ public class Datukudeatzailea {
 		System.out.println("13. 2 praktikako probak");
 		System.out.println("14. Bilatu egileen arteko erlazioa");
 		System.out.println("15.Kalkulatu daitezkeen erlazio kopurua");
-		System.out.println("16.Irten");
+		System.out.println("16. 4.Praktika proba azkarra");
+		System.out.println("17.4.Praktikako bi metodoak");
+		System.out.println("18.Irten");
 		int aukera = Teklatua.getTeklatua().irakurriInt();
 		if (datuakBeharrezkoak.contains(aukera) && !datuakKargatuta) {
 			System.out.println("⚠️ Lehenik datuak kargatu behar dituzu (aukera 1).");
@@ -322,20 +325,93 @@ public class Datukudeatzailea {
 		        System.out.println("Oso azkarra izan da (0 ms).");
 		    }
 		    break;
-		case 16:
-				System.out.println("Irten da programa.");
-				jarraitu = false;
-				break;
-		default:
-			System.out.println("Aukera okerra");
-			break;
 				
+		
+		case 16:
+			System.out.println("--- PROBA PAGERANK (Adibidea PDF: A, B, C, D) ---");
+			grafoa = new Graph();
+			
+			grafoa.probaGrafoTxikiarekin(); 
+			
+			System.out.println("\nPageRankExekutatzen...");
+			java.util.HashMap<String, Double> emaitzaPR = grafoa.pageRank();
+			
+			System.out.println("\nPageRankEmaitzak:");
+			emaitzaPR.entrySet().forEach(entry -> {
+			    System.out.println(entry.getKey() + ": " + String.format("%.4f", entry.getValue()));
+			});
+			
+			System.out.println("\nRandonWalk exekutatzen...");
+			java.util.HashMap<String, Double> emaitzaRW = grafoa.randomWalkPageRank();
+			emaitzaRW.entrySet().forEach(entry -> {
+			    System.out.println(entry.getKey() + ": " + String.format("%.4f", entry.getValue()));
+			});
+			break;
+		case 17: 
+            if (!datuakKargatuta) {
+                System.out.println("Lehenengo datuak kargatu behar dira");
+                break;
+            }
+
+            boolean grafoTxikiaDa = (grafoa != null && grafoa.keys != null && grafoa.keys.length < 100);
+
+            if (grafoa == null || grafoa.isEmpty() || grafoTxikiaDa) {
+                System.out.println("Grafo handia sortzen datu errealekin...");
+                grafoa = new Graph();
+                grafoa.grafoaSortu();
+                System.out.println("Grafo handia sortua.");
+            }
+
+
+            System.out.println("\n--- 1. PAGERANK Kalkulatzen ---");
+            long startPR = System.currentTimeMillis();
+            
+            HashMap<String, Double> resPR = grafoa.pageRank();
+            
+            long endPR = System.currentTimeMillis();
+            System.out.println("Bukatua " + (endPR - startPR) + " ms-etan.");
+            System.out.println("10 emaitza bisitatueank PAGERANK:");
+            inprimatuLehenengo10(resPR);
+
+ 
+            System.out.println("\n--- 2. RANDOM WALK kalkulatzen---");
+            long startRW = System.currentTimeMillis();
+            
+            HashMap<String, Double> resRW = grafoa.randomWalkPageRank();
+            
+            long endRW = System.currentTimeMillis();
+            System.out.println("Bukatua  " + (endRW - startRW) + " ms-tan");
+            System.out.println("10 emaitza bisitatueank:");
+            inprimatuLehenengo10(resRW);
+            
+            break;
+		case 18:
+			System.out.println("Irten da programa.");
+			jarraitu = false;
+			break;
+	default:
+		System.out.println("Aukera okerra");
+		break;
 		}
 		System.out.println("\nSakatu ENTER jarraitzeko...");
 		Teklatua.getTeklatua().irakurriString();	
 		}
 		
 	}
+    private static void inprimatuLehenengo10(HashMap<String, Double> map) {
+        if (map == null || map.isEmpty()) {
+            System.out.println("   (Ez dago emaitzarik)");
+            return;
+        }
+        ArrayList<java.util.Map.Entry<String, Double>> list = new ArrayList<>(map.entrySet());
+        list.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+        int count = 0;
+        for (java.util.Map.Entry<String, Double> entry : list) {
+            System.out.printf("   %2d. %-30s  (Valor: %.6f)\n", (count + 1), entry.getKey(), entry.getValue());
+            count++;
+            if (count >= 10) break;
+        }
+    }
 	public void readFile(String izena) {
 		  try {
 		    Scanner sarrera = new Scanner(new FileReader(izena));
